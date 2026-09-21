@@ -5,7 +5,7 @@ namespace TarjetaSube
     {
         public int Id { get; set; }
         public DateTime FechaHora { get; set; }
-        public int Tarifa { get; set; } = 1580;
+        public int Tarifa { get; set; } = Reglas.TarifaBasica;
         public int TarjetaId { get; set; }
         public int ColectivoId { get; set; }
 
