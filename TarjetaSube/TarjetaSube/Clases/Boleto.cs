@@ -12,5 +12,19 @@ namespace TarjetaSube
         public Tarjeta Tarjeta { get; set; } = null!;
         public Colectivo Colectivo { get; set; } = null!;
 
+        public static Boleto Registrar(Tarjeta tarjeta, Colectivo colectivo, int tarifa)
+        {
+            var boleto = new Boleto
+            {
+                FechaHora = Contexto.Fecha.Ahora(),
+                Tarifa = tarifa,
+                Tarjeta = tarjeta,
+                Colectivo = colectivo
+            };
+
+            Contexto.Db.Boletos.Add(boleto);
+            Contexto.Db.SaveChanges();
+            return boleto;
+        }
     }
 }
