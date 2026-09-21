@@ -8,6 +8,6 @@ namespace TarjetaSube
 		public int Numero { get; set; }
 		public int Saldo { get; set; }
 		public string Dueno { get; set; }
-
+		public List<Boleto> Boletos { get; set; } = new();
     }
 }
