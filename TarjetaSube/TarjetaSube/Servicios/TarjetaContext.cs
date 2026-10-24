@@ -5,6 +5,8 @@ namespace TarjetaSube
 
     public class TarjetaContext : DbContext
     {
+        public TarjetaContext() { }
+        public TarjetaContext(DbContextOptions<TarjetaContext> options) : base(options) { }
         public DbSet<Colectivo> Colectivos => Set<Colectivo>();
         public DbSet<Tarjeta> Tarjetas => Set<Tarjeta>();
         public DbSet<Boleto> Boletos => Set<Boleto>();
