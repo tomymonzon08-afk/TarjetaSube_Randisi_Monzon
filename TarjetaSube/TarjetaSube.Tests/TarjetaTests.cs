@@ -100,20 +100,20 @@ namespace TarjetaSube.Tests
         [Test]
         public void Crear_DatosValidos_GuardaLaTarjetaConSaldoCero()
         {
-            var tarjeta = Tarjeta.Crear(1234567890123456, "Ana");
+            var tarjeta = Tarjeta.Crear(123456789, "Ana");
 
             Contexto.Db.ChangeTracker.Clear();
             var guardada = Contexto.Db.Tarjetas.Find(tarjeta.Id);
 
             Assert.That(guardada, Is.Not.Null);
-            Assert.That(guardada!.Numero, Is.EqualTo(1234567890123456));
+            Assert.That(guardada!.Numero, Is.EqualTo(123456789));
             Assert.That(guardada.Dueno, Is.EqualTo("Ana"));
             Assert.That(guardada.Saldo, Is.EqualTo(0));
         }
 
         [TestCase(0)]
         [TestCase(-5)]
-        public void Crear_NumeroInvalido_LanzaExcepcion(long numero)
+        public void Crear_NumeroInvalido_LanzaExcepcion(int numero)
         {
             Assert.Throws<ArgumentException>(() => Tarjeta.Crear(numero, "Ana"));
         }
