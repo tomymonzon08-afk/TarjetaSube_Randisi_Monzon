@@ -37,12 +37,19 @@ namespace TarjetaSube {
             Contexto.Db.SaveChanges();
         }
 
-        public Boleto PagarCon(Tarjeta tarjeta)
-        {
-            tarjeta.DescontarSaldo(Reglas.TarifaBasica);  
-            Recaudacion += Reglas.TarifaBasica;
-            return Boleto.Registrar(tarjeta, this, Reglas.TarifaBasica);
+        public bool PagarCon(Tarjeta tarjeta, out Boleto? boleto){
+            boleto = null;
+            int tarifa = Reglas.TarifaBasica;
+
+            if (tarjeta.Saldo < tarifa)
+                return false;
+
+            tarjeta.DescontarSaldo(tarifa);
+            Recaudacion += tarifa;
+            boleto = Boleto.Registrar(tarjeta, this, tarifa);
+            return true;
         }
+
 
         public void CargarTarjeta(Tarjeta tarjeta, int monto)
         {
