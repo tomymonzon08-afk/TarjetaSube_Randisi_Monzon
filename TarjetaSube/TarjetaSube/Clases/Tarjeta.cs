@@ -10,7 +10,7 @@ namespace TarjetaSube
 		public string Dueno { get; set; }=string.Empty;
 		public List<Boleto> Boletos { get; set; } = new();
 
-        public static Tarjeta Crear(int numero, string dueno)
+        public static Tarjeta Crear(int numero, string dueno, int tipoId = Reglas.TipoNormalId)
         {
             if (numero <= 0)
                 throw new ArgumentException("El número de tarjeta no es válido.");
@@ -19,9 +19,12 @@ namespace TarjetaSube
             if (Contexto.Db.Tarjetas.Any(t => t.Numero == numero))
                 throw new InvalidOperationException("Ya existe una tarjeta con ese número.");
 
-            var tarjeta = new Tarjeta { Numero = numero, Dueno = dueno };
+            var tipo = Contexto.Db.TarjetaTipos.Find(tipoId)
+                ?? throw new ArgumentException("El tipo de tarjeta no existe.");
+            var tarjeta = new Tarjeta { Numero = numero, Dueno = dueno, TarjetaTipo = tipo };
             Contexto.Db.Tarjetas.Add(tarjeta);
             Contexto.Db.SaveChanges();
+
             return tarjeta;
         }
 
@@ -64,6 +67,11 @@ namespace TarjetaSube
 
             Saldo -= monto;
         }
+
+        public int TarjetaTipoId { get; set; } = Reglas.TipoNormalId;
+        public TarjetaTipo TarjetaTipo { get; set; } = null!;
+
+        public int CalcularTarifa() => TarjetaTipo.CalcularTarifa(Reglas.TarifaBasica);
 
     }
 }

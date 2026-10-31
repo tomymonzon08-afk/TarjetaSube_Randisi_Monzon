@@ -201,6 +201,61 @@ namespace TarjetaSube.Tests
 
             Assert.That(colectivo.Recaudacion, Is.EqualTo(0));
         }
+
+        [Test]
+        public void PagarCon_MedioBoleto_ElMontoEsLaMitadDelNormal()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana", 2);
+            tarjeta.AgregarSaldo(5000);
+
+            colectivo.PagarCon(tarjeta, out var boleto);
+
+            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica / 2));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - Reglas.TarifaBasica / 2));
+        }
+
+        [Test]
+        public void PagarCon_FranquiciaCompleta_SiemprePuedePagar()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana", 4); 
+
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.That(colectivo.PagarCon(tarjeta, out var boleto), Is.True);
+                Assert.That(boleto!.Tarifa, Is.EqualTo(0));
+            }
+            Assert.That(tarjeta.Saldo, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void PagarCon_MedioBoleto_LaRecaudacionSumaLaTarifaReal()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana", 2);
+            tarjeta.AgregarSaldo(5000);
+
+            colectivo.PagarCon(tarjeta, out _);
+
+            Assert.That(colectivo.Recaudacion, Is.EqualTo(790));
+        }
+
+        [Test]
+        public void PagarCon_FranquiciaCompleta_ConSaldoMinimo_TambienPuedePagar()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana", 4); 
+            tarjeta.Saldo = Reglas.SaldoMinimo; 
+
+            var resultado = colectivo.PagarCon(tarjeta, out var boleto);
+
+            Assert.That(resultado, Is.True);
+            Assert.That(boleto, Is.Not.Null);
+            Assert.That(boleto!.Tarifa, Is.EqualTo(0));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(Reglas.SaldoMinimo));
+            Assert.That(colectivo.Recaudacion, Is.EqualTo(0));
+        }
         [Test]
         public void PagarCon_NoPermiteQuedarPorDebajoDelSaldoMinimo()
         {
