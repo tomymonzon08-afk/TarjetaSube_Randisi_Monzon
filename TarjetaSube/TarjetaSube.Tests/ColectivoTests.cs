@@ -143,13 +143,13 @@ namespace TarjetaSube.Tests
         {
             var colectivo = Colectivo.Crear("K");
             var tarjeta = Tarjeta.Crear(1, "Ana");
-            tarjeta.Saldo = 1000;
+            tarjeta.Saldo = -1000;
 
             var resultado = colectivo.PagarCon(tarjeta, out var boleto);
 
             Assert.That(resultado, Is.False);
             Assert.That(boleto, Is.Null);
-            Assert.That(tarjeta.Saldo, Is.EqualTo(1000));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(-1000));
             Assert.That(colectivo.Recaudacion, Is.EqualTo(0));
             Assert.That(Contexto.Db.Boletos.Count(), Is.EqualTo(0));
         }
@@ -201,5 +201,45 @@ namespace TarjetaSube.Tests
 
             Assert.That(colectivo.Recaudacion, Is.EqualTo(0));
         }
+        [Test]
+        public void PagarCon_NoPermiteQuedarPorDebajoDelSaldoMinimo()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana");
+            tarjeta.Saldo = -500; 
+
+            var resultado = colectivo.PagarCon(tarjeta, out _);
+
+            Assert.That(resultado, Is.False);
+            Assert.That(tarjeta.Saldo, Is.EqualTo(-500));
+        }
+
+        [Test]
+        public void PagarCon_ViajesPlus_DescuentaCorrectamenteYLuegoLaCargaSaldaLaDeuda()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana");
+            tarjeta.Saldo = 1000;
+
+            Assert.That(colectivo.PagarCon(tarjeta, out _), Is.True);  
+            Assert.That(tarjeta.Saldo, Is.EqualTo(-580));
+            Assert.That(colectivo.PagarCon(tarjeta, out _), Is.False);  
+            Assert.That(tarjeta.Saldo, Is.EqualTo(-580));
+
+            colectivo.CargarTarjeta(tarjeta, 5000);                    
+            Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
+        }
+
+        [Test]
+        public void PagarCon_LlegaExactoAlSaldoMinimo_Permite()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana");
+            tarjeta.Saldo = -420;
+
+            Assert.That(colectivo.PagarCon(tarjeta, out _), Is.True);
+            Assert.That(tarjeta.Saldo, Is.EqualTo(Reglas.SaldoMinimo));
+        }
+
     }
 }
