@@ -1,4 +1,4 @@
-# # TarjetaSube_Randisi_Monzon
+# TarjetaSube_Randisi_Monzon
 
 ## Integrantes del grupo
  - Monzón Tomás
