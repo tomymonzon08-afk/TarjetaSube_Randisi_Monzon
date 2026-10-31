@@ -139,18 +139,34 @@ namespace TarjetaSube.Tests
         }
 
         [Test]
-        public void PagarCon_SaldoInsuficiente_LanzaExcepcionYNoDejaRastros()
+        public void PagarCon_SaldoInsuficiente_DevuelveFalseYNoDejaRastros()
         {
             var colectivo = Colectivo.Crear("K");
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.Saldo = 1000;
 
-            Assert.Throws<InvalidOperationException>(() => colectivo.PagarCon(tarjeta, out var boleto));
+            var resultado = colectivo.PagarCon(tarjeta, out var boleto);
 
+            Assert.That(resultado, Is.False);
+            Assert.That(boleto, Is.Null);
             Assert.That(tarjeta.Saldo, Is.EqualTo(1000));
             Assert.That(colectivo.Recaudacion, Is.EqualTo(0));
             Assert.That(Contexto.Db.Boletos.Count(), Is.EqualTo(0));
         }
+
+        [Test]
+        public void PagarCon_SaldoSuficiente_DevuelveTrueYBoleto()
+        {
+            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjeta.Crear(1, "Ana");
+            tarjeta.AgregarSaldo(5000);
+
+            var resultado = colectivo.PagarCon(tarjeta, out var boleto);
+
+            Assert.That(resultado, Is.True);
+            Assert.That(boleto, Is.Not.Null);
+        }
+
 
 
         [Test]
