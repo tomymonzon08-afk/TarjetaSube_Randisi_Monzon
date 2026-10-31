@@ -174,5 +174,27 @@ namespace TarjetaSube.Tests
             Assert.Throws<InvalidOperationException>(() => tarjeta.Eliminar());
             Assert.That(Contexto.Db.Tarjetas.Count(), Is.EqualTo(1));
         }
+
+        [Test]
+        public void Crear_ConTipoMedioBoleto_GuardaElTipo()
+        {
+            var tarjeta = Tarjeta.Crear(1, "Ana", 2);
+
+            Contexto.Db.ChangeTracker.Clear();
+            Assert.That(Contexto.Db.Tarjetas.Find(tarjeta.Id)!.TarjetaTipoId, Is.EqualTo(2));
+        }
+
+        [Test]
+        public void Crear_TipoInexistente_LanzaExcepcion()
+        {
+            Assert.Throws<ArgumentException>(() => Tarjeta.Crear(1, "Ana", 99));
+        }
+
+        [Test]
+        public void CalcularTarifa_TarjetaNormal_EsLaTarifaBasica()
+        {
+            var tarjeta = Tarjeta.Crear(1, "Ana");
+            Assert.That(tarjeta.CalcularTarifa(), Is.EqualTo(Reglas.TarifaBasica));
+        }
     }
 }

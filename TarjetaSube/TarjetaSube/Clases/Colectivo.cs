@@ -39,7 +39,9 @@ namespace TarjetaSube {
 
         public bool PagarCon(Tarjeta tarjeta, out Boleto? boleto){
             boleto = null;
-            int tarifa = Reglas.TarifaBasica;
+            Contexto.Db.Entry(tarjeta).Reference(t => t.TarjetaTipo).Load();
+            int tarifa = tarjeta.CalcularTarifa();
+
 
             if (tarjeta.Saldo < tarifa)
                 return false;
