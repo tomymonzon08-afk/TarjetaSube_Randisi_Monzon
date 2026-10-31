@@ -43,9 +43,9 @@ namespace TarjetaSube {
             int tarifa = tarjeta.CalcularTarifa();
 
 
-            if (tarjeta.Saldo < tarifa)
+            if (!tarjeta.PuedePagar(tarifa))
                 return false;
-
+                
             tarjeta.DescontarSaldo(tarifa);
             Recaudacion += tarifa;
             boleto = Boleto.Registrar(tarjeta, this, tarifa);

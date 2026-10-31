@@ -56,11 +56,13 @@ namespace TarjetaSube
             Saldo += monto;
         }
 
+        public bool PuedePagar(int monto) => Saldo - monto >= Reglas.SaldoMinimo;
+
         public void DescontarSaldo(int monto)
         {
-            if (monto <= 0)
-                throw new ArgumentException("El monto debe ser positivo.");
-            if (Saldo < monto)
+            if (monto < 0)
+                throw new ArgumentException("El monto no puede ser negativo.");
+            if (!PuedePagar(monto))
                 throw new InvalidOperationException("Saldo insuficiente.");
 
             Saldo -= monto;

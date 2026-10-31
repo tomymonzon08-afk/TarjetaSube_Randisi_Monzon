@@ -81,15 +81,14 @@ namespace TarjetaSube.Tests
         [Test]
         public void DescontarSaldo_SaldoInsuficiente_LanzaExcepcionYNoQuedaNegativo()
         {
-            var tarjeta = new Tarjeta { Saldo = 1000 };
+            var tarjeta = new Tarjeta { Saldo = -1000 };
 
             Assert.Throws<InvalidOperationException>(() => tarjeta.DescontarSaldo(1580));
-            Assert.That(tarjeta.Saldo, Is.EqualTo(1000));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(-1000));
         }
 
-        [TestCase(0)]
         [TestCase(-100)]
-        public void DescontarSaldo_MontoNoPositivo_LanzaExcepcion(int monto)
+        public void DescontarSaldo_MontoNegativo_LanzaExcepcion(int monto)
         {
             var tarjeta = new Tarjeta { Saldo = 5000 };
 
@@ -195,6 +194,26 @@ namespace TarjetaSube.Tests
         {
             var tarjeta = Tarjeta.Crear(1, "Ana");
             Assert.That(tarjeta.CalcularTarifa(), Is.EqualTo(Reglas.TarifaBasica));
+        [Test]
+        public void PuedePagar_EnElLimiteExacto_EsTrue()
+        {
+            var tarjeta = new Tarjeta { Saldo = -420 };
+            Assert.That(tarjeta.PuedePagar(1580), Is.True);
+        }
+
+        [Test]
+        public void PuedePagar_UnPesoDebajoDelLimite_EsFalse()
+        {
+            var tarjeta = new Tarjeta { Saldo = -421 }; 
+            Assert.That(tarjeta.PuedePagar(1580), Is.False);
+        }
+
+        [Test]
+        public void AgregarSaldo_ConSaldoNegativo_DescuentaLaDeuda()
+        {
+            var tarjeta = new Tarjeta { Saldo = -580 };
+            tarjeta.AgregarSaldo(5000);
+            Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
         }
     }
 }
