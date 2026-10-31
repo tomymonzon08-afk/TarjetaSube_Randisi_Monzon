@@ -22,15 +22,11 @@ catch (ArgumentException ex)
 
 for (int i = 1; i <= 4; i++)
 {
-    try
-    {
-        var boleto = colectivo.PagarCon(tarjeta);
-        Console.WriteLine($"Viaje {i}: boleto #{boleto.Id}, tarifa ${boleto.Tarifa}, saldo ${tarjeta.Saldo}");
-    }
-    catch (InvalidOperationException ex)
-    {
-        Console.WriteLine($"Viaje {i}: rechazado ({ex.Message}). Saldo ${tarjeta.Saldo}");
-    }
+    if (colectivo.PagarCon(tarjeta, out var boleto))
+        Console.WriteLine($"Viaje {i}: boleto #{boleto!.Id}, tarifa ${boleto.Tarifa}, saldo ${tarjeta.Saldo}");
+    else
+        Console.WriteLine($"Viaje {i}: rechazado. Saldo ${tarjeta.Saldo}");
+
 }
 
 Console.WriteLine($"Recaudación de la línea {colectivo.Linea}: ${colectivo.Recaudacion}");

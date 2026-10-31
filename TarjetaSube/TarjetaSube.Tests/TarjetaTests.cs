@@ -169,7 +169,7 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             var colectivo = Colectivo.Crear("K");
             tarjeta.AgregarSaldo(5000);
-            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out _);
 
             Assert.Throws<InvalidOperationException>(() => tarjeta.Eliminar());
             Assert.That(Contexto.Db.Tarjetas.Count(), Is.EqualTo(1));

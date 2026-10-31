@@ -63,7 +63,7 @@ namespace TarjetaSube.Tests
             var colectivo = Colectivo.Crear("K");
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
-            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out _);;
 
             Assert.Throws<InvalidOperationException>(() => colectivo.Eliminar());
             Assert.That(Contexto.Db.Colectivos.Count(), Is.EqualTo(1));
@@ -77,7 +77,7 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
-            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out _);
 
             Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - Reglas.TarifaBasica));
         }
@@ -89,8 +89,8 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
-            colectivo.PagarCon(tarjeta);
-            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out _);
+            colectivo.PagarCon(tarjeta, out _);
 
             Assert.That(colectivo.Recaudacion, Is.EqualTo(2 * Reglas.TarifaBasica));
         }
@@ -102,9 +102,10 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
-            var boleto = colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out var boleto);
 
-            Assert.That(boleto.Tarifa, Is.EqualTo(Reglas.TarifaBasica));
+            Assert.That(boleto, Is.Not.Null);
+            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica));
             Assert.That(boleto.FechaHora, Is.EqualTo(FechaFija));
             Assert.That(boleto.TarjetaId, Is.EqualTo(tarjeta.Id));
             Assert.That(boleto.ColectivoId, Is.EqualTo(colectivo.Id));
@@ -117,7 +118,7 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
-            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out var boleto); 
 
             Contexto.Db.ChangeTracker.Clear();
             Assert.That(Contexto.Db.Tarjetas.Find(tarjeta.Id)!.Saldo, Is.EqualTo(3420));
@@ -132,7 +133,7 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.Saldo = Reglas.TarifaBasica;
 
-            colectivo.PagarCon(tarjeta);
+            colectivo.PagarCon(tarjeta, out var boleto); 
 
             Assert.That(tarjeta.Saldo, Is.EqualTo(0));
         }
@@ -144,7 +145,7 @@ namespace TarjetaSube.Tests
             var tarjeta = Tarjeta.Crear(1, "Ana");
             tarjeta.Saldo = 1000;
 
-            Assert.Throws<InvalidOperationException>(() => colectivo.PagarCon(tarjeta));
+            Assert.Throws<InvalidOperationException>(() => colectivo.PagarCon(tarjeta, out var boleto));
 
             Assert.That(tarjeta.Saldo, Is.EqualTo(1000));
             Assert.That(colectivo.Recaudacion, Is.EqualTo(0));
