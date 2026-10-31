@@ -194,6 +194,7 @@ namespace TarjetaSube.Tests
         {
             var tarjeta = Tarjeta.Crear(1, "Ana");
             Assert.That(tarjeta.CalcularTarifa(), Is.EqualTo(Reglas.TarifaBasica));
+        }
         [Test]
         public void PuedePagar_EnElLimiteExacto_EsTrue()
         {
