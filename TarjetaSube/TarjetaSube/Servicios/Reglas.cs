@@ -3,7 +3,7 @@
     public static class Reglas
     {
         public const int TarifaBasica = 1580;
-        public const int SaldoMaximo = 40000;
+        public const int SaldoMaximo = 56000;
         public const int TipoNormalId = 1;
         public const int SaldoMinimo = -2000;
         public static readonly int[] CargasAceptadas =

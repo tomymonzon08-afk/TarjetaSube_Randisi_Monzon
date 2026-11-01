@@ -50,6 +50,7 @@ namespace TarjetaSube
                     .HasForeignKey(d => d.TarjetaTipoId)
                     .OnDelete(DeleteBehavior.Restrict);
 
+                entity.Property(e => e.SaldoPendiente).HasColumnName("saldo_pendiente");
 
             });
 
