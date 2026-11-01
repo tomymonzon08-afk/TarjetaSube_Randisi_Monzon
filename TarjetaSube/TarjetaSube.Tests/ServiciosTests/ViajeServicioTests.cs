@@ -218,14 +218,29 @@ namespace TarjetaSube
         public void Pagar_UsaLaFechaDelProveedor()
         {
             var otraFecha = new DateTime(2027, 1, 15, 8, 30, 0);
-            var viajes = new ViajeServicio(Db, new ProveedorDeFechaFalso(otraFecha));
+            Reloj.Fecha = otraFecha;
             var tarjeta = Tarjetas.Crear(1, "Ana");
             var colectivo = Colectivos.Crear("K");
             tarjeta.AgregarSaldo(5000);
 
-            viajes.Pagar(colectivo, tarjeta, out var boleto);
+            Viajes.Pagar(colectivo, tarjeta, out var boleto);
 
             Assert.That(boleto!.FechaHora, Is.EqualTo(otraFecha));
+        }
+
+        [Test]
+        public void Pagar_DosViajesConElRelojAvanzado_GuardaCadaFecha()
+        {
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            tarjeta.AgregarSaldo(5000);
+
+            Viajes.Pagar(colectivo, tarjeta, out var primero);
+            Reloj.Avanzar(TimeSpan.FromMinutes(6));
+            Viajes.Pagar(colectivo, tarjeta, out var segundo);
+
+            Assert.That(primero!.FechaHora, Is.EqualTo(FechaFija));
+            Assert.That(segundo!.FechaHora, Is.EqualTo(FechaFija.AddMinutes(6)));
         }
     }
 }

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace TarjetaSube.Tests
+﻿namespace TarjetaSube.Tests
 {
     public class ProveedorDeFechaFalso : IProveedorDeFecha
     {
-        private readonly DateTime _fecha;
+        public DateTime Fecha { get; set; }
 
-        public ProveedorDeFechaFalso(DateTime fecha) => _fecha = fecha;
+        public ProveedorDeFechaFalso(DateTime fecha) => Fecha = fecha;
 
-        public DateTime Ahora() => _fecha;
+        public DateTime Ahora() => Fecha;
+
+        public void Avanzar(TimeSpan tiempo) => Fecha += tiempo;
     }
 }

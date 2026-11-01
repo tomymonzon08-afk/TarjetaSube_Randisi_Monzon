@@ -26,7 +26,7 @@ catch (ArgumentException ex)
     Console.WriteLine($"Carga inválida rechazada: {ex.Message}");
 }
 
-for (int i = 1; i <= 4; i++)
+for (int i = 1; i <= 5; i++)
 {
     if (viajes.Pagar(colectivo,tarjeta, out var boleto))
         Console.WriteLine($"Viaje {i}: boleto #{boleto!.Id}, tarifa ${boleto.Tarifa}, saldo ${tarjeta.Saldo}");

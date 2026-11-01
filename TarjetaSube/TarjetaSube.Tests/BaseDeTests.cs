@@ -9,6 +9,7 @@ namespace TarjetaSube.Tests
         private SqliteConnection _conexion = null!;
 
         protected TarjetaContext Db = null!;
+        protected ProveedorDeFechaFalso Reloj = null!; 
         protected TarjetaServicio Tarjetas = null!;
         protected ColectivoServicio Colectivos = null!;
         protected ViajeServicio Viajes = null!;
@@ -24,10 +25,10 @@ namespace TarjetaSube.Tests
             Db = new TarjetaContext(opciones);
             Db.Database.EnsureCreated();
 
-            var fecha = new ProveedorDeFechaFalso(FechaFija);
+            Reloj = new ProveedorDeFechaFalso(FechaFija); 
             Tarjetas = new TarjetaServicio(Db);
             Colectivos = new ColectivoServicio(Db);
-            Viajes = new ViajeServicio(Db, fecha);
+            Viajes = new ViajeServicio(Db, Reloj);
             Cargas = new CargaServicio(Db);
         }
 
