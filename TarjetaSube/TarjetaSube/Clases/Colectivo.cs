@@ -20,13 +20,23 @@ namespace TarjetaSube {
                 return false;
 
             tarjeta.DescontarSaldo(tarifa);
-
             tarjeta.AcreditarCarga();
-
             Recaudacion += tarifa;
-            boleto = new Boleto { FechaHora = fecha, Tarifa = tarifa, Tarjeta = tarjeta, Colectivo = this };
+
+            boleto = new Boleto
+            {
+                FechaHora = fecha,
+                Tarifa = tarifa,
+                Tarjeta = tarjeta,
+                Colectivo = this,
+                TipoTarjeta = tarjeta.TarjetaTipo.Nombre,
+                Linea = Linea,
+                SaldoRestante = tarjeta.Saldo
+            };
+
             return true;
         }
+
 
 
     }

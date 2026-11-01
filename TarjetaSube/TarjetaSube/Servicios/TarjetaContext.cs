@@ -75,7 +75,13 @@ namespace TarjetaSube
                 .WithMany(p => p.Boletos)
                 .HasForeignKey(d => d.ColectivoId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+                entity.Property(e => e.TipoTarjeta).HasColumnName("tipo_tarjeta").IsRequired();
+                entity.Property(e => e.Linea).HasColumnName("linea").IsRequired();
+                entity.Property(e => e.SaldoRestante).HasColumnName("saldo_restante");
+
             });
+
             modelBuilder.Entity<TarjetaTipo>(entity =>
             {
                 entity.ToTable("TarjetaTipo");

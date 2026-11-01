@@ -28,8 +28,9 @@ catch (ArgumentException ex)
 
 for (int i = 1; i <= 5; i++)
 {
-    if (viajes.Pagar(colectivo,tarjeta, out var boleto))
-        Console.WriteLine($"Viaje {i}: boleto #{boleto!.Id}, tarifa ${boleto.Tarifa}, saldo ${tarjeta.Saldo}");
+    if (viajes.Pagar(colectivo, tarjeta, out var boleto))
+        Console.WriteLine($"Viaje {i}: {boleto!.TipoTarjeta}, línea {boleto.Linea}, abonó ${boleto.TotalAbonado}, saldo restante ${boleto.SaldoRestante}");
+
     else
         Console.WriteLine($"Viaje {i}: rechazado. Saldo ${tarjeta.Saldo}");
 
