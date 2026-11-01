@@ -242,5 +242,34 @@ namespace TarjetaSube
             Assert.That(primero!.FechaHora, Is.EqualTo(FechaFija));
             Assert.That(segundo!.FechaHora, Is.EqualTo(FechaFija.AddMinutes(6)));
         }
+
+        [Test]
+        public void ObtenerHistorial_SinViajes_DevuelveVacio()
+        {
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+
+            Assert.That(Viajes.ObtenerHistorial(tarjeta, Reloj.Ahora()), Is.EqualTo(HistorialDeViajes.Vacio));
+        }
+
+        [Test]
+        public void ObtenerHistorial_ContaSoloLosViajesDelDiaYDevuelveElUltimo()
+        {
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            tarjeta.AgregarSaldo(8000);
+
+            Reloj.Fecha = FechaFija.AddDays(-1);
+            Viajes.Pagar(colectivo, tarjeta, out _);       
+            Reloj.Fecha = FechaFija;
+            Viajes.Pagar(colectivo, tarjeta, out _);
+            Reloj.Avanzar(TimeSpan.FromMinutes(7));
+            Viajes.Pagar(colectivo, tarjeta, out _);
+
+            var historial = Viajes.ObtenerHistorial(tarjeta, Reloj.Ahora());
+
+            Assert.That(historial.ViajesHoy, Is.EqualTo(2));
+            Assert.That(historial.UltimoViaje, Is.EqualTo(FechaFija.AddMinutes(7)));
+        }
+
     }
 }
