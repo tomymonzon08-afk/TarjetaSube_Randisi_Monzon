@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 
 namespace TarjetaSube.Tests
@@ -11,11 +7,13 @@ namespace TarjetaSube.Tests
     {
         protected static readonly DateTime FechaFija = new(2026, 9, 21, 10, 0, 0);
 
+        private SqliteConnection _conexion = null!;
+
         protected TarjetaContext Db = null!;
         protected TarjetaServicio Tarjetas = null!;
         protected ColectivoServicio Colectivos = null!;
-
-        private SqliteConnection _conexion = null!;
+        protected ViajeServicio Viajes = null!;      // nuevo
+        protected CargaServicio Cargas = null!;      // nuevo
 
         [SetUp]
         public void PrepararContexto()
@@ -30,9 +28,12 @@ namespace TarjetaSube.Tests
             Contexto.Db = new TarjetaContext(opciones);
             Contexto.Db.Database.EnsureCreated();
             Contexto.Fecha = new ProveedorDeFechaFalso(FechaFija);
+
             Db = Contexto.Db;
             Tarjetas = new TarjetaServicio(Db);
             Colectivos = new ColectivoServicio(Db);
+            Viajes = new ViajeServicio(Db, Contexto.Fecha);   // nuevo
+            Cargas = new CargaServicio(Db);                   // nuevo
         }
 
         [TearDown]

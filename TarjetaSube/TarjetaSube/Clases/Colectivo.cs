@@ -8,26 +8,18 @@ namespace TarjetaSube {
 		public int Recaudacion { get; set; }
 		public List<Boleto> Boletos { get; set; } = new();
 
-        public bool PagarCon(Tarjeta tarjeta, out Boleto? boleto){
+        public bool PagarCon(Tarjeta tarjeta, DateTime fecha, out Boleto? boleto)
+        {
             boleto = null;
-            Contexto.Db.Entry(tarjeta).Reference(t => t.TarjetaTipo).Load();
             int tarifa = tarjeta.CalcularTarifa();
-
 
             if (!tarjeta.PuedePagar(tarifa))
                 return false;
-                
+
             tarjeta.DescontarSaldo(tarifa);
             Recaudacion += tarifa;
-            boleto = Boleto.Registrar(tarjeta, this, tarifa);
+            boleto = new Boleto { FechaHora = fecha, Tarifa = tarifa, Tarjeta = tarjeta, Colectivo = this };
             return true;
-        }
-
-
-        public void CargarTarjeta(Tarjeta tarjeta, int monto)
-        {
-            tarjeta.AgregarSaldo(monto);
-            Contexto.Db.SaveChanges();
         }
 
     }

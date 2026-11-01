@@ -3,8 +3,11 @@
 Contexto.Db.Database.EnsureDeleted();
 Contexto.Db.Database.EnsureCreated();
 
-var tarjeta = Tarjeta.Crear(123456, "Ana");
-var colectivo = Colectivo.Crear("K");
+var tarjetas = new TarjetaServicio(Contexto.Db);
+var colectivos = new ColectivoServicio(Contexto.Db);
+
+var tarjeta = tarjetas.Crear(123456, "Ana");
+var colectivo = colectivos.Crear("K");
 
 Console.WriteLine($"Saldo inicial: ${tarjeta.Saldo}");
 
