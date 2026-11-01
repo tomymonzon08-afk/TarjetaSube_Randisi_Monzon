@@ -83,19 +83,13 @@ namespace TarjetaSube
                 entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
                 entity.Property(e => e.Nombre).HasColumnName("nombre").IsRequired();
                 entity.Property(e => e.PorcentajeTarifa).HasColumnName("porcentaje_tarifa");
-                entity.HasData(
-                    new TarjetaTipo { Id = 1, Nombre = "Normal", PorcentajeTarifa = 100 },
-                    new TarjetaTipo { Id = 2, Nombre = "Medio boleto estudiantil", PorcentajeTarifa = 50 },
-                    new TarjetaTipo { Id = 3, Nombre = "Boleto gratuito estudiantil", PorcentajeTarifa = 0 },
-                    new TarjetaTipo { Id = 4, Nombre = "Franquicia completa", PorcentajeTarifa = 0 });
                 entity.Property(e => e.MinutosEntreViajes).HasColumnName("minutos_entre_viajes");
                 entity.Property(e => e.ViajesConBeneficioPorDia).HasColumnName("viajes_con_beneficio_por_dia");
                 entity.HasData(
                     new TarjetaTipo { Id = 1, Nombre = "Normal", PorcentajeTarifa = 100 },
                     new TarjetaTipo { Id = 2, Nombre = "Medio boleto estudiantil", PorcentajeTarifa = 50, MinutosEntreViajes = 5, ViajesConBeneficioPorDia = 2 },
-                    new TarjetaTipo { Id = 3, Nombre = "Boleto gratuito estudiantil", PorcentajeTarifa = 0 },
+                    new TarjetaTipo { Id = 3, Nombre = "Boleto gratuito estudiantil", PorcentajeTarifa = 0, ViajesConBeneficioPorDia = 2 },
                     new TarjetaTipo { Id = 4, Nombre = "Franquicia completa", PorcentajeTarifa = 0 });
-
             });
         }
 
