@@ -35,7 +35,7 @@ namespace TarjetaSube
             Saldo -= monto;
         }
 
-        public int CalcularTarifa() => TarjetaTipo.CalcularTarifa(Reglas.TarifaBasica);
+        public int CalcularTarifa(int viajesHoy = 0) => TarjetaTipo.CalcularTarifa(Reglas.TarifaBasica, viajesHoy);
 
     }
 }
