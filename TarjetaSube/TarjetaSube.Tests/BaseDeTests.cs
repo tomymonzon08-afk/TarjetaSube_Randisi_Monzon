@@ -5,42 +5,33 @@ namespace TarjetaSube.Tests
 {
     public abstract class BaseDeTests
     {
-        protected static readonly DateTime FechaFija = new(2026, 9, 21, 10, 0, 0);
-
+       protected static readonly DateTime FechaFija = new(2026, 9, 21, 10, 0, 0);
         private SqliteConnection _conexion = null!;
 
         protected TarjetaContext Db = null!;
         protected TarjetaServicio Tarjetas = null!;
         protected ColectivoServicio Colectivos = null!;
-        protected ViajeServicio Viajes = null!;      // nuevo
-        protected CargaServicio Cargas = null!;      // nuevo
+        protected ViajeServicio Viajes = null!;
+        protected CargaServicio Cargas = null!;
 
         [SetUp]
         public void PrepararContexto()
         {
             _conexion = new SqliteConnection("Data Source=:memory:");
             _conexion.Open();
+            var opciones = new DbContextOptionsBuilder<TarjetaContext>().UseSqlite(_conexion).Options;
 
-            var opciones = new DbContextOptionsBuilder<TarjetaContext>()
-                .UseSqlite(_conexion)
-                .Options;
+            Db = new TarjetaContext(opciones);
+            Db.Database.EnsureCreated();
 
-            Contexto.Db = new TarjetaContext(opciones);
-            Contexto.Db.Database.EnsureCreated();
-            Contexto.Fecha = new ProveedorDeFechaFalso(FechaFija);
-
-            Db = Contexto.Db;
+            var fecha = new ProveedorDeFechaFalso(FechaFija);
             Tarjetas = new TarjetaServicio(Db);
             Colectivos = new ColectivoServicio(Db);
-            Viajes = new ViajeServicio(Db, Contexto.Fecha);   // nuevo
-            Cargas = new CargaServicio(Db);                   // nuevo
+            Viajes = new ViajeServicio(Db, fecha);
+            Cargas = new CargaServicio(Db);
         }
 
         [TearDown]
-        public void LimpiarContexto()
-        {
-            Contexto.Db.Dispose();
-            _conexion.Dispose();
-        }
+        public void LimpiarContexto() { Db.Dispose(); _conexion.Dispose(); }
     }
 }

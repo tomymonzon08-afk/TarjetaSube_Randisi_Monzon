@@ -10,8 +10,8 @@ namespace TarjetaSube{
         {
             var tarjeta = Tarjetas.Crear(123456789, "Ana");
 
-            Contexto.Db.ChangeTracker.Clear();
-            var guardada = Contexto.Db.Tarjetas.Find(tarjeta.Id);
+            Db.ChangeTracker.Clear();
+            var guardada = Db.Tarjetas.Find(tarjeta.Id);
 
             Assert.That(guardada, Is.Not.Null);
             Assert.That(guardada!.Numero, Is.EqualTo(123456789));
@@ -46,8 +46,8 @@ namespace TarjetaSube{
         {
             var tarjeta = Tarjetas.Crear(1, "Ana", 2);
 
-            Contexto.Db.ChangeTracker.Clear();
-            Assert.That(Contexto.Db.Tarjetas.Find(tarjeta.Id)!.TarjetaTipoId, Is.EqualTo(2));
+            Db.ChangeTracker.Clear();
+            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.TarjetaTipoId, Is.EqualTo(2));
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace TarjetaSube{
 
             Tarjetas.Modificar(tarjeta,"Beto");
 
-            Contexto.Db.ChangeTracker.Clear();
-            Assert.That(Contexto.Db.Tarjetas.Find(tarjeta.Id)!.Dueno, Is.EqualTo("Beto"));
+            Db.ChangeTracker.Clear();
+            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.Dueno, Is.EqualTo("Beto"));
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace TarjetaSube{
 
             Tarjetas.Eliminar(tarjeta);
 
-            Assert.That(Contexto.Db.Tarjetas.Count(), Is.EqualTo(0));
+            Assert.That(Db.Tarjetas.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -91,10 +91,10 @@ namespace TarjetaSube{
             var tarjeta = Tarjetas.Crear(1, "Ana");
             var colectivo = Colectivos.Crear("K");
             tarjeta.AgregarSaldo(5000);
-            colectivo.PagarCon(tarjeta, out _);
+            Viajes.Pagar(colectivo, tarjeta, out _);
 
             Assert.Throws<InvalidOperationException>(() => Tarjetas.Eliminar(tarjeta));
-            Assert.That(Contexto.Db.Tarjetas.Count(), Is.EqualTo(1));
+            Assert.That(Db.Tarjetas.Count(), Is.EqualTo(1));
         }
 
     }

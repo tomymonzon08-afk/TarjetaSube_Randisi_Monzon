@@ -1,0 +1,31 @@
+using TarjetaSube.Tests;
+
+namespace TarjetaSube
+{
+    public class CargaServicioTests : BaseDeTests
+    {
+        [Test]
+        public void CargarTarjeta_MontoValido_SumaSaldoYPersiste()
+        {
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+
+            Cargas.Cargar(tarjeta, 5000);
+
+            Db.ChangeTracker.Clear();
+            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.Saldo, Is.EqualTo(5000));
+        }
+
+        [Test]
+        public void CargarTarjeta_MontoInvalido_LanzaExcepcionYNoCambiaSaldo()
+        {
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+
+            Assert.Throws<ArgumentException>(() => Cargas.Cargar(tarjeta, 1000));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(0));
+        }
+
+
+    }
+}

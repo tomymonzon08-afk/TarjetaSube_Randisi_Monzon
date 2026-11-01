@@ -9,8 +9,8 @@ namespace TarjetaSube
         {
             var colectivo = Colectivos.Crear("K");
 
-            Contexto.Db.ChangeTracker.Clear();
-            var guardado = Contexto.Db.Colectivos.Find(colectivo.Id);
+            Db.ChangeTracker.Clear();
+            var guardado = Db.Colectivos.Find(colectivo.Id);
 
             Assert.That(guardado, Is.Not.Null);
             Assert.That(guardado!.Linea, Is.EqualTo("K"));
@@ -31,8 +31,8 @@ namespace TarjetaSube
 
             Colectivos.Modificar(colectivo, "101");
 
-            Contexto.Db.ChangeTracker.Clear();
-            Assert.That(Contexto.Db.Colectivos.Find(colectivo.Id)!.Linea, Is.EqualTo("101"));
+            Db.ChangeTracker.Clear();
+            Assert.That(Db.Colectivos.Find(colectivo.Id)!.Linea, Is.EqualTo("101"));
         }
 
         [Test]
@@ -51,7 +51,7 @@ namespace TarjetaSube
 
             Colectivos.Eliminar(colectivo);
 
-            Assert.That(Contexto.Db.Colectivos.Count(), Is.EqualTo(0));
+            Assert.That(Db.Colectivos.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -60,10 +60,10 @@ namespace TarjetaSube
             var colectivo = Colectivos.Crear("K");
             var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
-            colectivo.PagarCon(tarjeta, out _);;
+            Viajes.Pagar(colectivo,tarjeta, out _);;
 
             Assert.Throws<InvalidOperationException>(() => Colectivos.Eliminar(colectivo));
-            Assert.That(Contexto.Db.Colectivos.Count(), Is.EqualTo(1));
+            Assert.That(Db.Colectivos.Count(), Is.EqualTo(1));
         }
     }
 }

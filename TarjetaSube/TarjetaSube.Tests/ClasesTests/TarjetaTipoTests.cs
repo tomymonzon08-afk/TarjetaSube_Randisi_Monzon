@@ -15,8 +15,8 @@
         [Test]
         public void ModeloInicial_ExistenLosCuatroTipos()
         {
-            Assert.That(Contexto.Db.TarjetaTipos.Count(), Is.EqualTo(4));
-            Assert.That(Contexto.Db.TarjetaTipos.Find(2)!.PorcentajeTarifa, Is.EqualTo(50));
+            Assert.That(Db.TarjetaTipos.Count(), Is.EqualTo(4));
+            Assert.That(Db.TarjetaTipos.Find(2)!.PorcentajeTarifa, Is.EqualTo(50));
         }
     }
 }
