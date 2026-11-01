@@ -40,7 +40,7 @@ namespace TarjetaSube
         {
             var colectivo = Colectivos.Crear("K");
 
-            Assert.Throws<ArgumentException>(() => Colectivos.Modificar(colectivo,"K"));
+            Assert.Throws<ArgumentException>(() => Colectivos.Modificar(colectivo," "));
             Assert.That(colectivo.Linea, Is.EqualTo("K"));
         }
 
