@@ -18,6 +18,17 @@
             Assert.That(Db.TarjetaTipos.Count(), Is.EqualTo(4));
             Assert.That(Db.TarjetaTipos.Find(2)!.PorcentajeTarifa, Is.EqualTo(50));
         }
+        [Test]
+        public void ModeloInicial_BoletoGratuitoTieneDosViajesYFranquiciaCompletaNoTieneLimite()
+        {
+            var gratuito = Db.TarjetaTipos.Find(3)!;
+            var franquicia = Db.TarjetaTipos.Find(4)!;
+
+            Assert.That(gratuito.ViajesConBeneficioPorDia, Is.EqualTo(2));
+            Assert.That(gratuito.MinutosEntreViajes, Is.EqualTo(0));
+            Assert.That(franquicia.ViajesConBeneficioPorDia, Is.Null);
+            Assert.That(franquicia.MinutosEntreViajes, Is.EqualTo(0));
+        }
         
         [TestCase(0, 790)]
         [TestCase(1, 790)]
