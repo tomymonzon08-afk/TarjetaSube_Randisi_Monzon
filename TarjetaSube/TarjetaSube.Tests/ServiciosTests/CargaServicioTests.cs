@@ -1,7 +1,4 @@
-using TarjetaSube.Tests;
-
-namespace TarjetaSube
-{
+namespace TarjetaSube.Tests{
     public class CargaServicioTests : BaseDeTests
     {
         [Test]

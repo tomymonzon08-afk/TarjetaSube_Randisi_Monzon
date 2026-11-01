@@ -182,6 +182,23 @@ namespace TarjetaSube.Tests
             Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
             Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(0));
         }
+        [TestCase(1, 790)]
+        [TestCase(2, 1580)]
+        public void CalcularTarifa_ConViajesDelDia_AplicaElLimiteDelTipo(int viajesHoy, int esperado)
+        {
+            var tarjeta = new Tarjeta { TarjetaTipo = new TarjetaTipo { PorcentajeTarifa = 50, ViajesConBeneficioPorDia = 2 } };
 
+            Assert.That(tarjeta.CalcularTarifa(viajesHoy), Is.EqualTo(esperado));
+        }
+
+        [Test]
+        public void DescontarSaldo_MontoCero_NoCambiaElSaldo()
+        {
+            var tarjeta = new Tarjeta { Saldo = 5000 };
+
+            tarjeta.DescontarSaldo(0);
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
+        }
     }
 }

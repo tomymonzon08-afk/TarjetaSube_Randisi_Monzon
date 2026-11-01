@@ -1,6 +1,4 @@
-using TarjetaSube.Tests;
-
-namespace TarjetaSube
+namespace TarjetaSube.Tests
 {
     public class ColectivoServicioTests : BaseDeTests
     {
@@ -60,7 +58,7 @@ namespace TarjetaSube
             var colectivo = Colectivos.Crear("K");
             var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
-            Viajes.Pagar(colectivo,tarjeta, out _);;
+            Viajes.Pagar(colectivo,tarjeta, out _);
 
             Assert.Throws<InvalidOperationException>(() => Colectivos.Eliminar(colectivo));
             Assert.That(Db.Colectivos.Count(), Is.EqualTo(1));
