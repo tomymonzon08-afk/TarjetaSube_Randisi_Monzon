@@ -271,5 +271,22 @@ namespace TarjetaSube
             Assert.That(historial.UltimoViaje, Is.EqualTo(FechaFija.AddMinutes(7)));
         }
 
+        [Test]
+        public void Pagar_GuardaTipoLineaSaldoRestanteEIdDeLaTarjeta()
+        {
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana", 2);
+            tarjeta.AgregarSaldo(5000);
+
+            Viajes.Pagar(colectivo, tarjeta, out var boleto);
+
+            Db.ChangeTracker.Clear();
+            var guardado = Db.Boletos.Find(boleto!.Id)!;
+            Assert.That(guardado.TipoTarjeta, Is.EqualTo("Medio boleto estudiantil"));
+            Assert.That(guardado.Linea, Is.EqualTo("K"));
+            Assert.That(guardado.SaldoRestante, Is.EqualTo(4210));
+            Assert.That(guardado.TarjetaId, Is.EqualTo(tarjeta.Id));
+        }
+
     }
 }
