@@ -17,10 +17,9 @@ namespace TarjetaSube
         {
             if (!Reglas.CargasAceptadas.Contains(monto))
                 throw new ArgumentException("Monto de carga no aceptado.");
-            if (Saldo + monto > Reglas.SaldoMaximo)
-                throw new InvalidOperationException("La carga supera el saldo máximo permitido.");
 
-            Saldo += monto;
+            SaldoPendiente += monto;
+            AcreditarCarga();
         }
 
         public bool PuedePagar(int monto) => Saldo - monto >= Reglas.SaldoMinimo;
@@ -36,6 +35,17 @@ namespace TarjetaSube
         }
 
         public int CalcularTarifa(int viajesHoy = 0) => TarjetaTipo.CalcularTarifa(Reglas.TarifaBasica, viajesHoy);
+
+        public int SaldoPendiente { get; set; }
+
+        public void AcreditarCarga()
+        {
+            int espacioLibre = Math.Max(0, Reglas.SaldoMaximo - Saldo);
+            int acreditable = Math.Min(espacioLibre, SaldoPendiente);
+
+            Saldo += acreditable;
+            SaldoPendiente -= acreditable;
+        }
 
     }
 }

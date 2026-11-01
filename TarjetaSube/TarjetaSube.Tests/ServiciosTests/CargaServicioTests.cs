@@ -26,6 +26,19 @@ namespace TarjetaSube
             Assert.That(tarjeta.Saldo, Is.EqualTo(0));
         }
 
+        [Test]
+        public void Cargar_SuperaElMaximo_PersisteSaldoYPendiente()
+        {
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+
+            Cargas.Cargar(tarjeta, 30000);
+            Cargas.Cargar(tarjeta, 30000);   
+
+            Db.ChangeTracker.Clear();
+            var guardada = Db.Tarjetas.Find(tarjeta.Id)!;
+            Assert.That(guardada.Saldo, Is.EqualTo(56000));
+            Assert.That(guardada.SaldoPendiente, Is.EqualTo(4000));
+        }
 
     }
 }

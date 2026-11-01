@@ -42,20 +42,24 @@ namespace TarjetaSube.Tests
         [Test]
         public void AgregarSaldo_LlegaExactoAlLimite_Permite()
         {
-            var tarjeta = new Tarjeta { Saldo = 10000 };
+            var tarjeta = new Tarjeta { Saldo = 26000 };
 
             tarjeta.AgregarSaldo(30000);
 
             Assert.That(tarjeta.Saldo, Is.EqualTo(Reglas.SaldoMaximo));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(0));
         }
 
-        [Test]
-        public void AgregarSaldo_SuperaElLimite_LanzaExcepcionYNoCambiaSaldo()
-        {
-            var tarjeta = new Tarjeta { Saldo = 39000 };
 
-            Assert.Throws<InvalidOperationException>(() => tarjeta.AgregarSaldo(2000));
-            Assert.That(tarjeta.Saldo, Is.EqualTo(39000));
+        [Test]
+        public void AgregarSaldo_SuperaElMaximo_AcreditaHastaElMaximoYDejaElExcedentePendiente()
+        {
+            var tarjeta = new Tarjeta { Saldo = 50000 };
+
+            tarjeta.AgregarSaldo(10000);
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000));
         }
 
         [Test]
@@ -123,5 +127,61 @@ namespace TarjetaSube.Tests
             tarjeta.AgregarSaldo(5000);
             Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
         }
+
+        [Test]
+        public void AcreditarCarga_ConEspacio_AcreditaTodoElPendiente()
+        {
+            var tarjeta = new Tarjeta { Saldo = 10000, SaldoPendiente = 3000 };
+
+            tarjeta.AcreditarCarga();
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(13000));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AcreditarCarga_ConEspacioParcial_AcreditaSoloLoQueEntra()
+        {
+            var tarjeta = new Tarjeta { Saldo = 54420, SaldoPendiente = 4000 };
+
+            tarjeta.AcreditarCarga();
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(2420));
+        }
+
+        [Test]
+        public void AcreditarCarga_SinPendiente_NoCambiaNada()
+        {
+            var tarjeta = new Tarjeta { Saldo = 5000 };
+
+            tarjeta.AcreditarCarga();
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(5000));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(0));
+        }
+
+        [Test]
+        public void AcreditarCarga_ConSaldoEnElMaximo_NoAcredita()
+        {
+            var tarjeta = new Tarjeta { Saldo = 56000, SaldoPendiente = 4000 };
+
+            tarjeta.AcreditarCarga();
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(56000));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(4000));
+        }
+
+        [Test]
+        public void AgregarSaldo_ConPendienteYSaldoNegativo_CubreLaDeudaYAcredita()
+        {
+            var tarjeta = new Tarjeta { Saldo = -580 };
+
+            tarjeta.AgregarSaldo(5000);
+
+            Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
+            Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(0));
+        }
+
     }
 }
