@@ -99,7 +99,7 @@ namespace TarjetaSube.Tests
         [Test]
         public void Crear_DatosValidos_GuardaLaTarjetaConSaldoCero()
         {
-            var tarjeta = Tarjeta.Crear(123456789, "Ana");
+            var tarjeta = Tarjetas.Crear(123456789, "Ana");
 
             Contexto.Db.ChangeTracker.Clear();
             var guardada = Contexto.Db.Tarjetas.Find(tarjeta.Id);
@@ -114,28 +114,28 @@ namespace TarjetaSube.Tests
         [TestCase(-5)]
         public void Crear_NumeroInvalido_LanzaExcepcion(int numero)
         {
-            Assert.Throws<ArgumentException>(() => Tarjeta.Crear(numero, "Ana"));
+            Assert.Throws<ArgumentException>(() => Tarjetas.Crear(numero, "Ana"));
         }
 
         [TestCase("")]
         [TestCase("   ")]
         public void Crear_DuenoVacio_LanzaExcepcion(string dueno)
         {
-            Assert.Throws<ArgumentException>(() => Tarjeta.Crear(1, dueno));
+            Assert.Throws<ArgumentException>(() => Tarjetas.Crear(1, dueno));
         }
 
         [Test]
         public void Crear_NumeroRepetido_LanzaExcepcion()
         {
-            Tarjeta.Crear(1, "Ana");
+            Tarjetas.Crear(1, "Ana");
 
-            Assert.Throws<InvalidOperationException>(() => Tarjeta.Crear(1, "Beto"));
+            Assert.Throws<InvalidOperationException>(() => Tarjetas.Crear(1, "Beto"));
         }
 
         [Test]
         public void Modificar_DuenoValido_ActualizaYPersiste()
         {
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
 
             tarjeta.Modificar("Beto");
 
@@ -146,7 +146,7 @@ namespace TarjetaSube.Tests
         [Test]
         public void Modificar_DuenoVacio_LanzaExcepcionYNoCambia()
         {
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
 
             Assert.Throws<ArgumentException>(() => tarjeta.Modificar(" "));
             Assert.That(tarjeta.Dueno, Is.EqualTo("Ana"));
@@ -155,7 +155,7 @@ namespace TarjetaSube.Tests
         [Test]
         public void Eliminar_SinBoletos_BorraLaTarjeta()
         {
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
 
             tarjeta.Eliminar();
 
@@ -165,8 +165,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void Eliminar_ConBoletos_LanzaExcepcionYNoBorra()
         {
-            var tarjeta = Tarjeta.Crear(1, "Ana");
-            var colectivo = Colectivo.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
             tarjeta.AgregarSaldo(5000);
             colectivo.PagarCon(tarjeta, out _);
 
@@ -177,7 +177,7 @@ namespace TarjetaSube.Tests
         [Test]
         public void Crear_ConTipoMedioBoleto_GuardaElTipo()
         {
-            var tarjeta = Tarjeta.Crear(1, "Ana", 2);
+            var tarjeta = Tarjetas.Crear(1, "Ana", 2);
 
             Contexto.Db.ChangeTracker.Clear();
             Assert.That(Contexto.Db.Tarjetas.Find(tarjeta.Id)!.TarjetaTipoId, Is.EqualTo(2));
@@ -186,13 +186,13 @@ namespace TarjetaSube.Tests
         [Test]
         public void Crear_TipoInexistente_LanzaExcepcion()
         {
-            Assert.Throws<ArgumentException>(() => Tarjeta.Crear(1, "Ana", 99));
+            Assert.Throws<ArgumentException>(() => Tarjetas.Crear(1, "Ana", 99));
         }
 
         [Test]
         public void CalcularTarifa_TarjetaNormal_EsLaTarifaBasica()
         {
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             Assert.That(tarjeta.CalcularTarifa(), Is.EqualTo(Reglas.TarifaBasica));
         }
         [Test]

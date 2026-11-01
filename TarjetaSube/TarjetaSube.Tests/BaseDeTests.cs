@@ -11,6 +11,10 @@ namespace TarjetaSube.Tests
     {
         protected static readonly DateTime FechaFija = new(2026, 9, 21, 10, 0, 0);
 
+        protected TarjetaContext Db = null!;
+        protected TarjetaServicio Tarjetas = null!;
+        protected ColectivoServicio Colectivos = null!;
+
         private SqliteConnection _conexion = null!;
 
         [SetUp]
@@ -26,6 +30,9 @@ namespace TarjetaSube.Tests
             Contexto.Db = new TarjetaContext(opciones);
             Contexto.Db.Database.EnsureCreated();
             Contexto.Fecha = new ProveedorDeFechaFalso(FechaFija);
+            Db = Contexto.Db;
+            Tarjetas = new TarjetaServicio(Db);
+            Colectivos = new ColectivoServicio(Db);
         }
 
         [TearDown]

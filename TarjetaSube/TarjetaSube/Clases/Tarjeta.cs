@@ -13,41 +13,6 @@ namespace TarjetaSube
         public int TarjetaTipoId { get; set; } = Reglas.TipoNormalId;
         public TarjetaTipo TarjetaTipo { get; set; } = null!;
 
-        public static Tarjeta Crear(int numero, string dueno, int tipoId = Reglas.TipoNormalId)
-        {
-            if (numero <= 0)
-                throw new ArgumentException("El número de tarjeta no es válido.");
-            if (string.IsNullOrWhiteSpace(dueno))
-                throw new ArgumentException("El dueño es obligatorio.");
-            if (Contexto.Db.Tarjetas.Any(t => t.Numero == numero))
-                throw new InvalidOperationException("Ya existe una tarjeta con ese número.");
-
-            var tipo = Contexto.Db.TarjetaTipos.Find(tipoId) ?? throw new ArgumentException("El tipo de tarjeta no existe.");
-            var tarjeta = new Tarjeta { Numero = numero, Dueno = dueno, TarjetaTipo = tipo };
-            Contexto.Db.Tarjetas.Add(tarjeta);
-            Contexto.Db.SaveChanges();
-
-            return tarjeta;
-        }
-
-        public void Modificar(string dueno)
-        {
-            if (string.IsNullOrWhiteSpace(dueno))
-                throw new ArgumentException("El dueño es obligatorio.");
-
-            Dueno = dueno;
-            Contexto.Db.SaveChanges();
-        }
-
-        public void Eliminar()
-        {
-            if (Contexto.Db.Boletos.Any(b => b.TarjetaId == Id))
-                throw new InvalidOperationException("No se puede eliminar una tarjeta con boletos asociados.");
-
-            Contexto.Db.Tarjetas.Remove(this);
-            Contexto.Db.SaveChanges();
-        }
-
         public void AgregarSaldo(int monto)
         {
             if (!Reglas.CargasAceptadas.Contains(monto))

@@ -10,7 +10,7 @@ namespace TarjetaSube.Tests
         [Test]
         public void Crear_LineaValida_GuardaConRecaudacionCero()
         {
-            var colectivo = Colectivo.Crear("K");
+            var colectivo = Colectivos.Crear("K");
 
             Contexto.Db.ChangeTracker.Clear();
             var guardado = Contexto.Db.Colectivos.Find(colectivo.Id);
@@ -24,15 +24,15 @@ namespace TarjetaSube.Tests
         [TestCase("   ")]
         public void Crear_LineaVacia_LanzaExcepcion(string linea)
         {
-            Assert.Throws<ArgumentException>(() => Colectivo.Crear(linea));
+            Assert.Throws<ArgumentException>(() => Colectivos.Crear(linea));
         }
 
         [Test]
         public void Modificar_LineaValida_ActualizaYPersiste()
         {
-            var colectivo = Colectivo.Crear("K");
+            var colectivo = Colectivos.Crear("K");
 
-            colectivo.Modificar("101");
+            Colectivos.Modificar(colectivo, "101");
 
             Contexto.Db.ChangeTracker.Clear();
             Assert.That(Contexto.Db.Colectivos.Find(colectivo.Id)!.Linea, Is.EqualTo("101"));
@@ -41,18 +41,18 @@ namespace TarjetaSube.Tests
         [Test]
         public void Modificar_LineaVacia_LanzaExcepcionYNoCambia()
         {
-            var colectivo = Colectivo.Crear("K");
+            var colectivo = Colectivos.Crear("K");
 
-            Assert.Throws<ArgumentException>(() => colectivo.Modificar(""));
+            Assert.Throws<ArgumentException>(() => Colectivos.Modificar(colectivo,"K"));
             Assert.That(colectivo.Linea, Is.EqualTo("K"));
         }
 
         [Test]
         public void Eliminar_SinBoletos_BorraElColectivo()
         {
-            var colectivo = Colectivo.Crear("K");
+            var colectivo = Colectivos.Crear("K");
 
-            colectivo.Eliminar();
+            Colectivos.Eliminar(colectivo);
 
             Assert.That(Contexto.Db.Colectivos.Count(), Is.EqualTo(0));
         }
@@ -60,12 +60,12 @@ namespace TarjetaSube.Tests
         [Test]
         public void Eliminar_ConBoletos_LanzaExcepcionYNoBorra()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
             colectivo.PagarCon(tarjeta, out _);;
 
-            Assert.Throws<InvalidOperationException>(() => colectivo.Eliminar());
+            Assert.Throws<InvalidOperationException>(() => Colectivos.Eliminar(colectivo));
             Assert.That(Contexto.Db.Colectivos.Count(), Is.EqualTo(1));
         }
 
@@ -73,8 +73,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoSuficiente_DescuentaLaTarifa()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
             colectivo.PagarCon(tarjeta, out _);
@@ -85,8 +85,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoSuficiente_SumaLaRecaudacion()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
             colectivo.PagarCon(tarjeta, out _);
@@ -98,8 +98,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoSuficiente_DevuelveBoletoConLosDatosCorrectos()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
             colectivo.PagarCon(tarjeta, out var boleto);
@@ -114,8 +114,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoSuficiente_PersisteSaldoRecaudacionYBoleto()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
             colectivo.PagarCon(tarjeta, out var boleto); 
@@ -129,8 +129,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoJusto_PermiteElViajeYQuedaEnCero()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.Saldo = Reglas.TarifaBasica;
 
             colectivo.PagarCon(tarjeta, out var boleto); 
@@ -141,8 +141,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoInsuficiente_DevuelveFalseYNoDejaRastros()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.Saldo = -1000;
 
             var resultado = colectivo.PagarCon(tarjeta, out var boleto);
@@ -157,8 +157,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_SaldoSuficiente_DevuelveTrueYBoleto()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);
 
             var resultado = colectivo.PagarCon(tarjeta, out var boleto);
@@ -172,8 +172,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void CargarTarjeta_MontoValido_SumaSaldoYPersiste()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
 
             colectivo.CargarTarjeta(tarjeta, 5000);
 
@@ -184,8 +184,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void CargarTarjeta_MontoInvalido_LanzaExcepcionYNoCambiaSaldo()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
 
             Assert.Throws<ArgumentException>(() => colectivo.CargarTarjeta(tarjeta, 1000));
             Assert.That(tarjeta.Saldo, Is.EqualTo(0));
@@ -194,8 +194,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void CargarTarjeta_NoModificaLaRecaudacion()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
 
             colectivo.CargarTarjeta(tarjeta, 5000);
 
@@ -205,8 +205,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_MedioBoleto_ElMontoEsLaMitadDelNormal()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana", 2);
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana", 2);
             tarjeta.AgregarSaldo(5000);
 
             colectivo.PagarCon(tarjeta, out var boleto);
@@ -218,8 +218,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_FranquiciaCompleta_SiemprePuedePagar()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana", 4); 
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana", 4); 
 
             for (int i = 0; i < 5; i++)
             {
@@ -232,8 +232,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_MedioBoleto_LaRecaudacionSumaLaTarifaReal()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana", 2);
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana", 2);
             tarjeta.AgregarSaldo(5000);
 
             colectivo.PagarCon(tarjeta, out _);
@@ -244,8 +244,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_FranquiciaCompleta_ConSaldoMinimo_TambienPuedePagar()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana", 4); 
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana", 4); 
             tarjeta.Saldo = Reglas.SaldoMinimo; 
 
             var resultado = colectivo.PagarCon(tarjeta, out var boleto);
@@ -259,8 +259,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_NoPermiteQuedarPorDebajoDelSaldoMinimo()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.Saldo = -500; 
 
             var resultado = colectivo.PagarCon(tarjeta, out _);
@@ -272,8 +272,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_ViajesPlus_DescuentaCorrectamenteYLuegoLaCargaSaldaLaDeuda()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.Saldo = 1000;
 
             Assert.That(colectivo.PagarCon(tarjeta, out _), Is.True);  
@@ -288,8 +288,8 @@ namespace TarjetaSube.Tests
         [Test]
         public void PagarCon_LlegaExactoAlSaldoMinimo_Permite()
         {
-            var colectivo = Colectivo.Crear("K");
-            var tarjeta = Tarjeta.Crear(1, "Ana");
+            var colectivo = Colectivos.Crear("K");
+            var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.Saldo = -420;
 
             Assert.That(colectivo.PagarCon(tarjeta, out _), Is.True);

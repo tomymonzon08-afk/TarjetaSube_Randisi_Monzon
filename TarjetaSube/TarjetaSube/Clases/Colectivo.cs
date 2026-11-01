@@ -8,35 +8,6 @@ namespace TarjetaSube {
 		public int Recaudacion { get; set; }
 		public List<Boleto> Boletos { get; set; } = new();
 
-        public static Colectivo Crear(string linea)
-        {
-            if (string.IsNullOrWhiteSpace(linea))
-                throw new ArgumentException("La línea es obligatoria.");
-
-            var colectivo = new Colectivo { Linea = linea };
-            Contexto.Db.Colectivos.Add(colectivo);
-            Contexto.Db.SaveChanges();
-            return colectivo;
-        }
-
-        public void Modificar(string linea)
-        {
-            if (string.IsNullOrWhiteSpace(linea))
-                throw new ArgumentException("La línea es obligatoria.");
-
-            Linea = linea;
-            Contexto.Db.SaveChanges();
-        }
-
-        public void Eliminar()
-        {
-            if (Contexto.Db.Boletos.Any(b => b.ColectivoId == Id))
-                throw new InvalidOperationException("No se puede eliminar un colectivo con boletos asociados.");
-
-            Contexto.Db.Colectivos.Remove(this);
-            Contexto.Db.SaveChanges();
-        }
-
         public bool PagarCon(Tarjeta tarjeta, out Boleto? boleto){
             boleto = null;
             Contexto.Db.Entry(tarjeta).Reference(t => t.TarjetaTipo).Load();
