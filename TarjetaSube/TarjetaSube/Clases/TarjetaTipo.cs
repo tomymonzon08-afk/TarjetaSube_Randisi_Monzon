@@ -14,10 +14,17 @@
 
         public int CalcularTarifa(int tarifaBase, int viajesHoy = 0, int viajesDelMes = 0)
         {
+            int tarifa = tarifaBase * PorcentajeTarifa / 100;
+
             if (ViajesConBeneficioPorDia.HasValue && viajesHoy >= ViajesConBeneficioPorDia.Value)
-                return tarifaBase;
-            return tarifaBase * PorcentajeTarifa / 100;
+                tarifa = tarifaBase;
+
+            if (AplicaUsoFrecuente)
+                tarifa = tarifa * (100 - UsoFrecuente.PorcentajeDescuento(viajesDelMes + 1)) / 100;
+
+            return tarifa;
         }
+
 
         public bool PermiteViajar(DateTime ahora, DateTime? ultimoViaje)
         {
