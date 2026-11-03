@@ -8,6 +8,8 @@ namespace TarjetaSube {
 		public int Recaudacion { get; set; }
 		public List<Boleto> Boletos { get; set; } = new();
 
+        public int TarifaBase => Reglas.TarifaBasica;
+
         public bool PagarCon(Tarjeta tarjeta, DateTime fecha, HistorialDeViajes historial, out Boleto? boleto)
         {
             boleto = null;
@@ -15,7 +17,7 @@ namespace TarjetaSube {
             if (!tarjeta.TarjetaTipo.PermiteViajar(fecha, historial.UltimoViaje))
                 return false;
 
-            int tarifa = tarjeta.CalcularTarifa(historial.ViajesHoy);
+            int tarifa = tarjeta.CalcularTarifa(historial.ViajesHoy, TarifaBase, historial.ViajesDelMes);
             if (!tarjeta.PuedePagar(tarifa))
                 return false;
 

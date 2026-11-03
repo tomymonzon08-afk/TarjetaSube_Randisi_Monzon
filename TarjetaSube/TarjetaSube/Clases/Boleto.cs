@@ -19,5 +19,7 @@ namespace TarjetaSube
         public int TotalAbonado => Tarifa;
         public int PlusAdeudado => SaldoRestante < 0 ? -SaldoRestante : 0;
 
+        public bool EsTransbordo { get; set; }
+
     }
 }

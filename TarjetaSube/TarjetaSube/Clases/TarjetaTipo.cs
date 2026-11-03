@@ -9,7 +9,10 @@
         public int MinutosEntreViajes { get; set; }
         public int? ViajesConBeneficioPorDia { get; set; }
 
-        public int CalcularTarifa(int tarifaBase, int viajesHoy = 0)
+        public bool UsaFranjaHoraria { get; set; }
+        public bool AplicaUsoFrecuente { get; set; }
+
+        public int CalcularTarifa(int tarifaBase, int viajesHoy = 0, int viajesDelMes = 0)
         {
             if (ViajesConBeneficioPorDia.HasValue && viajesHoy >= ViajesConBeneficioPorDia.Value)
                 return tarifaBase;

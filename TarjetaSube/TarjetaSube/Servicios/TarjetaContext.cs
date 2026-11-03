@@ -59,13 +59,11 @@ namespace TarjetaSube
                 entity.ToTable("Boleto");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
-
                 entity.Property(e => e.FechaHora).HasColumnName("fecha_hora");
-
                 entity.Property(e => e.Tarifa).HasColumnName("tarifa");
                 entity.Property(e => e.TarjetaId).HasColumnName("tarjeta_id");
                 entity.Property(e => e.ColectivoId).HasColumnName("colectivo_id");
-
+                entity.Property(e => e.EsTransbordo).HasColumnName("es_transbordo");
                 entity.HasOne(d => d.Tarjeta)
                 .WithMany(p => p.Boletos)
                 .HasForeignKey(d => d.TarjetaId)
@@ -91,11 +89,13 @@ namespace TarjetaSube
                 entity.Property(e => e.PorcentajeTarifa).HasColumnName("porcentaje_tarifa");
                 entity.Property(e => e.MinutosEntreViajes).HasColumnName("minutos_entre_viajes");
                 entity.Property(e => e.ViajesConBeneficioPorDia).HasColumnName("viajes_con_beneficio_por_dia");
+                entity.Property(e => e.UsaFranjaHoraria).HasColumnName("usa_franja_horaria");
+                entity.Property(e => e.AplicaUsoFrecuente).HasColumnName("aplica_uso_frecuente");
                 entity.HasData(
-                    new TarjetaTipo { Id = 1, Nombre = "Normal", PorcentajeTarifa = 100 },
-                    new TarjetaTipo { Id = 2, Nombre = "Medio boleto estudiantil", PorcentajeTarifa = 50, MinutosEntreViajes = 5, ViajesConBeneficioPorDia = 2 },
-                    new TarjetaTipo { Id = 3, Nombre = "Boleto gratuito estudiantil", PorcentajeTarifa = 0, ViajesConBeneficioPorDia = 2 },
-                    new TarjetaTipo { Id = 4, Nombre = "Franquicia completa", PorcentajeTarifa = 0 });
+                    new TarjetaTipo { Id = 1, Nombre = "Normal", PorcentajeTarifa = 100, AplicaUsoFrecuente = true },
+                    new TarjetaTipo { Id = 2, Nombre = "Medio boleto estudiantil", PorcentajeTarifa = 50, MinutosEntreViajes = 5, ViajesConBeneficioPorDia = 2, UsaFranjaHoraria = true },
+                    new TarjetaTipo { Id = 3, Nombre = "Boleto gratuito estudiantil", PorcentajeTarifa = 0, ViajesConBeneficioPorDia = 2, UsaFranjaHoraria = true },
+                    new TarjetaTipo { Id = 4, Nombre = "Franquicia completa", PorcentajeTarifa = 0, UsaFranjaHoraria = true });
             });
         }
 
