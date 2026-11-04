@@ -11,6 +11,8 @@ namespace TarjetaSube
         public DbSet<Tarjeta> Tarjetas => Set<Tarjeta>();
         public DbSet<Boleto> Boletos => Set<Boleto>();
         public DbSet<TarjetaTipo> TarjetaTipos => Set<TarjetaTipo>();
+        public DbSet<EstacionBici> EstacionesBici => Set<EstacionBici>();
+        public DbSet<AlquilerBici> AlquileresBici => Set<AlquilerBici>();
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -52,6 +54,8 @@ namespace TarjetaSube
                     .OnDelete(DeleteBehavior.Restrict);
 
                 entity.Property(e => e.SaldoPendiente).HasColumnName("saldo_pendiente");
+
+                entity.Property(e => e.MultasBiciPendientes).HasColumnName("multas_bici_pendientes");
 
             });
 
@@ -99,6 +103,39 @@ namespace TarjetaSube
                     new TarjetaTipo { Id = 4, Nombre = "Franquicia completa", PorcentajeTarifa = 0, UsaFranjaHoraria = true });
             });
         }
+
+        modelBuilder.Entity<EstacionBici>(entity =>
+        {
+            entity.ToTable("EstacionBici");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(e => e.Nombre).HasColumnName("nombre").IsRequired();
+            entity.Property(e => e.Recaudacion).HasColumnName("recaudacion");
+        });
+
+        modelBuilder.Entity<AlquilerBici>(entity =>
+        {
+            entity.ToTable("AlquilerBici");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
+            entity.Property(e => e.FechaRetiro).HasColumnName("fecha_retiro");
+            entity.Property(e => e.FechaDevolucion).HasColumnName("fecha_devolucion");
+            entity.Property(e => e.PagoElDia).HasColumnName("pago_el_dia");
+            entity.Property(e => e.ExcedioElTiempo).HasColumnName("excedio_el_tiempo");
+            entity.Property(e => e.TarifaCobrada).HasColumnName("tarifa_cobrada");
+            entity.Property(e => e.MultasCobradas).HasColumnName("multas_cobradas");
+            entity.Property(e => e.TarjetaId).HasColumnName("tarjeta_id");
+
+            entity.Property(e => e.EstacionId).HasColumnName("estacion_id");
+            entity.HasOne(d => d.Tarjeta)
+                .WithMany()
+                .HasForeignKey(d => d.TarjetaId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne(d => d.Estacion)
+                .WithMany(p => p.Alquileres)
+                .HasForeignKey(d => d.EstacionId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
 
     }
 }

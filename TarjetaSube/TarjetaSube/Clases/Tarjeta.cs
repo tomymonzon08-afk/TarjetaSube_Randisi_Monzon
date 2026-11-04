@@ -46,6 +46,7 @@ namespace TarjetaSube
             SaldoPendiente -= acreditable;
         }
 
+        public int MultasBiciPendientes { get; set; }
 
     }
 }

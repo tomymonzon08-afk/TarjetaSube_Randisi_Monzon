@@ -9,6 +9,9 @@
         public static readonly int[] CargasAceptadas =
             { 2000, 3000, 4000, 5000, 8000, 10000, 15000, 20000, 25000, 30000 };
             public const int TarifaInterurbana = 3000;
+            public const decimal TarifaBici = 2418.75m;
+            public const decimal MultaBici = 1250m;
+            public const int MinutosMaximosBici = 60;
             public const int MinutosVentanaTrasbordo = 60;
 
             public static readonly FranjaHoraria FranjaFranquicias = new(DayOfWeek.Monday, DayOfWeek.Friday, 6, 22);

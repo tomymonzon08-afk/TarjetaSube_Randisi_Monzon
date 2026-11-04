@@ -14,6 +14,13 @@ namespace TarjetaSube.Tests
         protected ColectivoServicio Colectivos = null!;
         protected ViajeServicio Viajes = null!;
         protected CargaServicio Cargas = null!;
+        protected EstacionBiciServicio Estaciones = null!;
+        protected RetiroBiciServicio Retiros = null!;
+        protected DevolucionBiciServicio Devoluciones = null!;
+        
+        Estaciones = new EstacionBiciServicio(Db);
+        Retiros = new RetiroBiciServicio(Db, Reloj);
+        Devoluciones = new DevolucionBiciServicio(Db, Reloj);
 
         [SetUp]
         public void PrepararContexto()
