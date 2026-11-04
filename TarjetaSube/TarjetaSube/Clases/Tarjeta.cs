@@ -6,7 +6,9 @@ namespace TarjetaSube
 	{
 		public int Id { get; set; }
 		public int Numero { get; set; }
-		public int Saldo { get; set; }
+		public decimal Saldo { get; set; }
+
+        public decimal SaldoPendiente { get; set; }
 		public string Dueno { get; set; }=string.Empty;
 		public List<Boleto> Boletos { get; set; } = new();
 
@@ -22,9 +24,8 @@ namespace TarjetaSube
             AcreditarCarga();
         }
 
-        public bool PuedePagar(int monto) => Saldo - monto >= Reglas.SaldoMinimo;
-
-        public void DescontarSaldo(int monto)
+        public bool PuedePagar(decimal monto) => Saldo - monto >= Reglas.SaldoMinimo;
+        public void DescontarSaldo(decimal monto)   
         {
             if (monto < 0)
                 throw new ArgumentException("El monto no puede ser negativo.");
@@ -34,19 +35,17 @@ namespace TarjetaSube
             Saldo -= monto;
         }
 
-        public int CalcularTarifa(int viajesHoy = 0, int tarifaBase = Reglas.TarifaBasica, int viajesDelMes = 0) => TarjetaTipo.CalcularTarifa(tarifaBase, viajesHoy, viajesDelMes);
-
-
-        public int SaldoPendiente { get; set; }
+        public decimal CalcularTarifa(int viajesHoy = 0, decimal tarifaBase = Reglas.TarifaBasica, int viajesDelMes = 0)  => TarjetaTipo.CalcularTarifa(tarifaBase, viajesHoy, viajesDelMes);
 
         public void AcreditarCarga()
         {
-            int espacioLibre = Math.Max(0, Reglas.SaldoMaximo - Saldo);
-            int acreditable = Math.Min(espacioLibre, SaldoPendiente);
+            decimal espacioLibre = Math.Max(0m, Reglas.SaldoMaximo - Saldo);
+            decimal acreditable = Math.Min(espacioLibre, SaldoPendiente);
 
             Saldo += acreditable;
             SaldoPendiente -= acreditable;
         }
+
 
     }
 }
