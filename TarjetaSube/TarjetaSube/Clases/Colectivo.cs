@@ -14,18 +14,20 @@ namespace TarjetaSube {
         public bool PagarCon(Tarjeta tarjeta, DateTime fecha, HistorialDeViajes historial, out Boleto? boleto)
         {
             boleto = null;
+            bool esTrasbordo = ReglaTrasbordo.Aplica(fecha, Linea, historial);
+            int tarifa = 0;
+            if (!esTrasbordo)
+            {
+                if (!tarjeta.TarjetaTipo.PermiteViajar(fecha, historial.UltimoViaje))
+                    return false;
+                tarifa = tarjeta.CalcularTarifa(historial.ViajesHoy, TarifaBase, historial.ViajesDelMes);
 
-            if (!tarjeta.TarjetaTipo.PermiteViajar(fecha, historial.UltimoViaje))
-                return false;
-
-            int tarifa = tarjeta.CalcularTarifa(historial.ViajesHoy, TarifaBase, historial.ViajesDelMes);
-            if (!tarjeta.PuedePagar(tarifa))
-                return false;
-
+                if (!tarjeta.PuedePagar(tarifa))
+                    return false;
+            }
             tarjeta.DescontarSaldo(tarifa);
             tarjeta.AcreditarCarga();
             Recaudacion += tarifa;
-
             boleto = new Boleto
             {
                 FechaHora = fecha,
@@ -34,13 +36,11 @@ namespace TarjetaSube {
                 Colectivo = this,
                 TipoTarjeta = tarjeta.TarjetaTipo.Nombre,
                 Linea = Linea,
-                SaldoRestante = tarjeta.Saldo
+                SaldoRestante = tarjeta.Saldo,
+                EsTransbordo = esTrasbordo
             };
-
             return true;
         }
-
-
 
     }
 }
