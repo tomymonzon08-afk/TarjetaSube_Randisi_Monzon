@@ -15,12 +15,14 @@ namespace TarjetaSube.Tests
             Db.SaveChanges();
         }
 
-        [TestCase(28, Reglas.TarifaBasica)]
-        [TestCase(29, Reglas.TarifaBasica * 80 / 100)]
-        [TestCase(78, Reglas.TarifaBasica * 80 / 100)]
-        [TestCase(79, Reglas.TarifaBasica * 75 / 100)]
-        public void Pagar_SegunLosViajesPreviosDelMes_CobraElTramoCorrespondiente(int previos, int esperado)
+        [TestCase(28, 100)]
+        [TestCase(29, 80)]
+        [TestCase(78, 80)]
+        [TestCase(79, 75)]
+        public void Pagar_SegunLosViajesPreviosDelMes_CobraElTramoCorrespondiente(int previos, int porcentajePagado)
         {
+            var esperado = Reglas.TarifaBasica * porcentajePagado / 100m;
+
             var colectivo = Colectivos.Crear("K");
             var tarjeta = Tarjetas.Crear(1, "Ana");
             tarjeta.AgregarSaldo(5000);

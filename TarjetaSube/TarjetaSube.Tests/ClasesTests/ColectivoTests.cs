@@ -56,7 +56,7 @@ namespace TarjetaSube.Tests
 
             colectivo.PagarCon(tarjeta, FechaFija, HistorialDeViajes.Vacio, out var boleto);
 
-            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica * 25 / 100));
+            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica * 25 / 100m));
         }
     }
 }

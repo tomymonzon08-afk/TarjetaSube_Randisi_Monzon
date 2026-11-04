@@ -49,8 +49,8 @@ namespace TarjetaSube.Tests
             for (int i = 0; i < 4; i++)
                 Viajes.Pagar(colectivo, tarjeta, out _);
 
-            Assert.That(Db.Boletos.Count(b => b.Tarifa == 0), Is.EqualTo(2));
-            Assert.That(Db.Boletos.Count(b => b.Tarifa == Reglas.TarifaBasica), Is.EqualTo(2));
+            Assert.That(Db.Boletos.ToList().Count(b => b.Tarifa == 0), Is.EqualTo(2));
+            Assert.That(Db.Boletos.ToList().Count(b => b.Tarifa == Reglas.TarifaBasica), Is.EqualTo(2));
         }
 
         [Test]
