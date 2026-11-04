@@ -64,8 +64,8 @@ namespace TarjetaSube.Tests
                 Reloj.Avanzar(TimeSpan.FromMinutes(5));
             }
 
-            Assert.That(Db.Boletos.Count(b => b.Tarifa == Reglas.TarifaBasica / 2), Is.EqualTo(2));
-            Assert.That(Db.Boletos.Count(b => b.Tarifa == Reglas.TarifaBasica), Is.EqualTo(2));
+            Assert.That(Db.Boletos.ToList().Count(b => b.Tarifa == Reglas.TarifaBasica / 2), Is.EqualTo(2));
+            Assert.That(Db.Boletos.ToList().Count(b => b.Tarifa == Reglas.TarifaBasica), Is.EqualTo(2));
         }
 
         [Test]

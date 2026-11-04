@@ -13,18 +13,18 @@ namespace TarjetaSube.Tests
             Assert.That(UsoFrecuente.PorcentajeDescuento(numeroDeViaje), Is.EqualTo(esperado));
         }
 
-        // viajesDelMes = viajes anteriores; el que se paga es el número viajesDelMes + 1
-        [TestCase(0, Reglas.TarifaBasica)]
-        [TestCase(28, Reglas.TarifaBasica)]                  // viaje 29
-        [TestCase(29, Reglas.TarifaBasica * 80 / 100)]       // viaje 30
-        [TestCase(78, Reglas.TarifaBasica * 80 / 100)]       // viaje 79
-        [TestCase(79, Reglas.TarifaBasica * 75 / 100)]       // viaje 80: 1612,5 se trunca a 1612
-        [TestCase(150, Reglas.TarifaBasica * 75 / 100)]
-        public void CalcularTarifa_TipoNormal_AplicaElTramoDelMes(int viajesDelMes, int esperado)
+        [TestCase(0, 100)]
+        [TestCase(28, 100)]    // viaje 29
+        [TestCase(29, 80)]     // viaje 30
+        [TestCase(78, 80)]     // viaje 79
+        [TestCase(79, 75)]     // viaje 80: 2150 * 75% = 1612,50
+        [TestCase(150, 75)]
+        public void CalcularTarifa_TipoNormal_AplicaElTramoDelMes(int viajesDelMes, int porcentajePagado)
         {
             var tipo = new TarjetaTipo { PorcentajeTarifa = 100, AplicaUsoFrecuente = true };
 
-            Assert.That(tipo.CalcularTarifa(Reglas.TarifaBasica, 0, viajesDelMes), Is.EqualTo(esperado));
+            Assert.That(tipo.CalcularTarifa(Reglas.TarifaBasica, 0, viajesDelMes),
+                Is.EqualTo(Reglas.TarifaBasica * porcentajePagado / 100m));
         }
 
         [Test]
