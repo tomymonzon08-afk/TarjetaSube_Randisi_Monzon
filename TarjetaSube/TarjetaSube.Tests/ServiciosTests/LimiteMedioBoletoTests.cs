@@ -22,8 +22,8 @@ namespace TarjetaSube.Tests
             Assert.That(resultado, Is.False);
             Assert.That(boleto, Is.Null);
             Assert.That(Db.Boletos.Count(), Is.EqualTo(1));
-            Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - Reglas.TarifaBasica / 2.));
-            Assert.That(colectivo.Recaudacion, Is.EqualTo(Reglas.TarifaBasica / 2.));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - Reglas.TarifaBasica / 2));
+            Assert.That(colectivo.Recaudacion, Is.EqualTo(Reglas.TarifaBasica / 2));
         }
 
         [Test]
@@ -64,7 +64,7 @@ namespace TarjetaSube.Tests
                 Reloj.Avanzar(TimeSpan.FromMinutes(5));
             }
 
-            Assert.That(Db.Boletos.Count(b => b.Tarifa == Reglas.TarifaBasica / 2.), Is.EqualTo(2));
+            Assert.That(Db.Boletos.Count(b => b.Tarifa == Reglas.TarifaBasica / 2), Is.EqualTo(2));
             Assert.That(Db.Boletos.Count(b => b.Tarifa == Reglas.TarifaBasica), Is.EqualTo(2));
         }
 
@@ -80,7 +80,7 @@ namespace TarjetaSube.Tests
             Reloj.Fecha = FechaFija.AddDays(1);
             Viajes.Pagar(colectivo, tarjeta, out var boleto);
 
-            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica / 2.));
+            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica / 2));
         }
 
         [Test]
