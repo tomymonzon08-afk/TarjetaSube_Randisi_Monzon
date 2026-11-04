@@ -28,6 +28,8 @@
 
         public bool PermiteViajar(DateTime ahora, DateTime? ultimoViaje)
         {
+            if (UsaFranjaHoraria && !Reglas.FranjaFranquicias.Contiene(ahora))
+                return false;
             if (MinutosEntreViajes <= 0 || ultimoViaje is null)
                 return true;
             return ahora - ultimoViaje.Value >= TimeSpan.FromMinutes(MinutosEntreViajes);
