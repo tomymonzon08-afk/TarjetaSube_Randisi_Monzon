@@ -5,12 +5,11 @@ namespace TarjetaSube
         private readonly TarjetaContext _db;
         public ColectivoServicio(TarjetaContext db) => _db = db;
 
-        public Colectivo Crear(string linea)
+        public Colectivo Crear(string linea, bool esInterurbana = false)
         {
             if (string.IsNullOrWhiteSpace(linea))
                 throw new ArgumentException("La línea es obligatoria.");
-
-            var colectivo = new Colectivo { Linea = linea };
+            var colectivo = new Colectivo { Linea = linea, EsInterurbana = esInterurbana };
             _db.Colectivos.Add(colectivo);
             _db.SaveChanges();
             return colectivo;

@@ -8,7 +8,8 @@ namespace TarjetaSube {
 		public int Recaudacion { get; set; }
 		public List<Boleto> Boletos { get; set; } = new();
 
-        public int TarifaBase => Reglas.TarifaBasica;
+        public bool EsInterurbana { get; set; }
+        public int TarifaBase => EsInterurbana ? Reglas.TarifaInterurbana : Reglas.TarifaBasica;
 
         public bool PagarCon(Tarjeta tarjeta, DateTime fecha, HistorialDeViajes historial, out Boleto? boleto)
         {
