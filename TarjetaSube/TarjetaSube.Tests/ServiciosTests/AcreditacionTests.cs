@@ -42,7 +42,7 @@
             Viajes.Pagar(colectivo, tarjeta, out _);
 
             Db.ChangeTracker.Clear();
-            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.SaldoPendiente, Is.EqualTo(2420));
+            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.SaldoPendiente, Is.EqualTo(4000 - Reglas.TarifaBasica));
         }
     }
 }

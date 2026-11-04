@@ -2,8 +2,8 @@
 {
     public class BoletoTests : BaseDeTests
     {
-        [TestCase("Normal", 100, 1580, 3420)]
-        [TestCase("Medio boleto estudiantil", 50, 790, 4210)]
+        [TestCase("Normal", 100, Reglas.TarifaBasica, 5000 - Reglas.TarifaBasica)]
+        [TestCase("Medio boleto estudiantil", 50, Reglas.TarifaBasica / 2, 5000 - Reglas.TarifaBasica / 2)]
         [TestCase("Boleto gratuito estudiantil", 0, 0, 5000)]
         [TestCase("Franquicia completa", 0, 0, 5000)]
         public void PagarCon_BoletoInformaTipoLineaTotalYSaldo(string tipo, int porcentaje, int total, int saldoRestante)
@@ -32,9 +32,9 @@
 
             colectivo.PagarCon(tarjeta, FechaFija, HistorialDeViajes.Vacio, out var boleto);
 
-            Assert.That(boleto!.TotalAbonado, Is.EqualTo(1580));
-            Assert.That(boleto.SaldoRestante, Is.EqualTo(-580));
-            Assert.That(boleto.PlusAdeudado, Is.EqualTo(580));
+            Assert.That(boleto!.TotalAbonado, Is.EqualTo(Reglas.TarifaBasica));
+            Assert.That(boleto.SaldoRestante, Is.EqualTo(1000 - Reglas.TarifaBasica));
+            Assert.That(boleto.PlusAdeudado, Is.EqualTo(Reglas.TarifaBasica - 1000));
         }
 
         [Test]

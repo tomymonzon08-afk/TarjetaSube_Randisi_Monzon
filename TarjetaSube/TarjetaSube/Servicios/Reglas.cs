@@ -2,7 +2,7 @@
 {
     public static class Reglas
     {
-        public const int TarifaBasica = 1580;
+        public const int TarifaBasica = 2150;
         public const int SaldoMaximo = 56000;
         public const int TipoNormalId = 1;
         public const int SaldoMinimo = -2000;

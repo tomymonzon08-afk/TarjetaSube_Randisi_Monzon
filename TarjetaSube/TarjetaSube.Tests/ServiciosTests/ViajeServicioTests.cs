@@ -52,8 +52,8 @@ namespace TarjetaSube.Tests{
             Viajes.Pagar(colectivo, tarjeta, out var boleto); 
 
             Db.ChangeTracker.Clear();
-            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.Saldo, Is.EqualTo(3420));
-            Assert.That(Db.Colectivos.Find(colectivo.Id)!.Recaudacion, Is.EqualTo(1580));
+            Assert.That(Db.Tarjetas.Find(tarjeta.Id)!.Saldo, Is.EqualTo(5000 - Reglas.TarifaBasica));
+            Assert.That(Db.Colectivos.Find(colectivo.Id)!.Recaudacion, Is.EqualTo(Reglas.TarifaBasica));
             Assert.That(Db.Boletos.Count(), Is.EqualTo(1));
         }
 
@@ -134,7 +134,7 @@ namespace TarjetaSube.Tests{
 
             Viajes.Pagar(colectivo, tarjeta, out _);
 
-            Assert.That(colectivo.Recaudacion, Is.EqualTo(790));
+            Assert.That(colectivo.Recaudacion, Is.EqualTo(Reglas.TarifaBasica / 2));
         }
 
         [Test]
@@ -173,12 +173,12 @@ namespace TarjetaSube.Tests{
             tarjeta.Saldo = 1000;
 
             Assert.That(Viajes.Pagar(colectivo, tarjeta, out _), Is.True);  
-            Assert.That(tarjeta.Saldo, Is.EqualTo(-580));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(1000 - Reglas.TarifaBasica));
             Assert.That(Viajes.Pagar(colectivo, tarjeta, out _), Is.False);  
-            Assert.That(tarjeta.Saldo, Is.EqualTo(-580));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(1000 - Reglas.TarifaBasica));
 
             Cargas.Cargar(tarjeta, 5000);                    
-            Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(5000 + 1000 - Reglas.TarifaBasica));        
         }
 
         [Test]
@@ -186,7 +186,7 @@ namespace TarjetaSube.Tests{
         {
             var colectivo = Colectivos.Crear("K");
             var tarjeta = Tarjetas.Crear(1, "Ana");
-            tarjeta.Saldo = -420;
+            tarjeta.Saldo = Reglas.SaldoMinimo + Reglas.TarifaBasica;
 
             Assert.That(Viajes.Pagar(colectivo, tarjeta, out _), Is.True);
             Assert.That(tarjeta.Saldo, Is.EqualTo(Reglas.SaldoMinimo));
@@ -206,7 +206,7 @@ namespace TarjetaSube.Tests{
 
             Assert.That(guardado, Is.Not.Null);
             Assert.That(guardado!.FechaHora, Is.EqualTo(FechaFija));
-            Assert.That(guardado.Tarifa, Is.EqualTo(1580));
+            Assert.That(guardado.Tarifa, Is.EqualTo(Reglas.TarifaBasica));
             Assert.That(guardado.TarjetaId, Is.EqualTo(tarjeta.Id));
             Assert.That(guardado.ColectivoId, Is.EqualTo(colectivo.Id));
         }
@@ -281,7 +281,7 @@ namespace TarjetaSube.Tests{
             var guardado = Db.Boletos.Find(boleto!.Id)!;
             Assert.That(guardado.TipoTarjeta, Is.EqualTo("Medio boleto estudiantil"));
             Assert.That(guardado.Linea, Is.EqualTo("K"));
-            Assert.That(guardado.SaldoRestante, Is.EqualTo(4210));
+            Assert.That(guardado.SaldoRestante, Is.EqualTo(5000 - Reglas.TarifaBasica / 2));
             Assert.That(guardado.TarjetaId, Is.EqualTo(tarjeta.Id));
         }
 

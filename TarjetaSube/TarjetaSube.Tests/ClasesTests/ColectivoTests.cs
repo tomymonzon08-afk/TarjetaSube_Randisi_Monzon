@@ -13,9 +13,9 @@ namespace TarjetaSube.Tests
             var resultado = colectivo.PagarCon(tarjeta, FechaFija, HistorialDeViajes.Vacio, out var boleto);
 
             Assert.That(resultado, Is.True);
-            Assert.That(boleto!.Tarifa, Is.EqualTo(1580));
-            Assert.That(tarjeta.Saldo, Is.EqualTo(3420));
-            Assert.That(colectivo.Recaudacion, Is.EqualTo(1580));
+            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica));
+            Assert.That(tarjeta.Saldo, Is.EqualTo(5000 - Reglas.TarifaBasica));
+            Assert.That(colectivo.Recaudacion, Is.EqualTo(Reglas.TarifaBasica));
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace TarjetaSube.Tests
 
             colectivo.PagarCon(tarjeta, FechaFija, HistorialDeViajes.Vacio, out var boleto);
 
-            Assert.That(boleto!.Tarifa, Is.EqualTo(395));
+            Assert.That(boleto!.Tarifa, Is.EqualTo(Reglas.TarifaBasica * 25 / 100));
         }
     }
 }
