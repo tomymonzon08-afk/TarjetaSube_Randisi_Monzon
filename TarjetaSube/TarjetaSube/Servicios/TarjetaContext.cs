@@ -31,6 +31,7 @@ namespace TarjetaSube
                 entity.Property(e => e.Id).HasColumnName("id").ValueGeneratedOnAdd();
                 entity.Property(e => e.Linea).HasColumnName("linea").IsRequired();
                 entity.Property(e => e.Recaudacion).HasColumnName("recaudacion");
+                entity.Property(e =>; e.EsInterurbana).HasColumnName("es_interurbana");
             });
 
             modelBuilder.Entity<Tarjeta>(entity =>
