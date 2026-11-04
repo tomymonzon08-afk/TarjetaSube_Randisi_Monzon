@@ -182,8 +182,8 @@ namespace TarjetaSube.Tests
             Assert.That(tarjeta.Saldo, Is.EqualTo(4420));
             Assert.That(tarjeta.SaldoPendiente, Is.EqualTo(0));
         }
-        [TestCase(1, 790)]
-        [TestCase(2, 1580)]
+        [TestCase(1, Reglas.TarifaBasica / 2)]
+        [TestCase(2, Reglas.TarifaBasica)]
         public void CalcularTarifa_ConViajesDelDia_AplicaElLimiteDelTipo(int viajesHoy, int esperado)
         {
             var tarjeta = new Tarjeta { TarjetaTipo = new TarjetaTipo { PorcentajeTarifa = 50, ViajesConBeneficioPorDia = 2 } };

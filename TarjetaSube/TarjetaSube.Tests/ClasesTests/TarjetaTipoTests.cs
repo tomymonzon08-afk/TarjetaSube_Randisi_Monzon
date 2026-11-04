@@ -2,8 +2,8 @@
 {
     public class TarjetaTipoTests : BaseDeTests
     {
-        [TestCase(100, 1580)]
-        [TestCase(50, 790)]
+        [TestCase(100, Reglas.TarifaBasica)]
+        [TestCase(50, Reglas.TarifaBasica / 2)]
         [TestCase(0, 0)]
         public void CalcularTarifa_AplicaElPorcentaje(int porcentaje, int esperado)
         {
@@ -30,10 +30,10 @@
             Assert.That(franquicia.MinutosEntreViajes, Is.EqualTo(0));
         }
         
-        [TestCase(0, 790)]
-        [TestCase(1, 790)]
-        [TestCase(2, 1580)]
-        [TestCase(5, 1580)]
+        [TestCase(0, Reglas.TarifaBasica / 2)]
+        [TestCase(1, Reglas.TarifaBasica / 2)]
+        [TestCase(2, Reglas.TarifaBasica)]
+        [TestCase(5, Reglas.TarifaBasica)]
         public void CalcularTarifa_ConLimiteDeViajes_CobraNormalDespuesDelLimite(int viajesHoy, int esperado)
         {
             var tipo = new TarjetaTipo { PorcentajeTarifa = 50, ViajesConBeneficioPorDia = 2 };
