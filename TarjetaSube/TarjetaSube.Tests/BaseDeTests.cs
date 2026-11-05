@@ -18,9 +18,6 @@ namespace TarjetaSube.Tests
         protected RetiroBiciServicio Retiros = null!;
         protected DevolucionBiciServicio Devoluciones = null!;
         
-        Estaciones = new EstacionBiciServicio(Db);
-        Retiros = new RetiroBiciServicio(Db, Reloj);
-        Devoluciones = new DevolucionBiciServicio(Db, Reloj);
 
         [SetUp]
         public void PrepararContexto()
@@ -37,6 +34,9 @@ namespace TarjetaSube.Tests
             Colectivos = new ColectivoServicio(Db);
             Viajes = new ViajeServicio(Db, Reloj);
             Cargas = new CargaServicio(Db);
+            Estaciones = new EstacionBiciServicio(Db);
+            Retiros = new RetiroBiciServicio(Db, Reloj);
+            Devoluciones = new DevolucionBiciServicio(Db, Reloj);
         }
 
         [TearDown]
