@@ -16,5 +16,19 @@
         public EstacionBici Estacion { get; set; } = null!;
         public decimal TotalAbonado => TarifaCobrada + MultasCobradas *
         Reglas.MultaBici;
+
+        public bool Devolver(DateTime fecha)
+        {
+            if (FechaDevolucion is not null)
+                return false;
+
+            FechaDevolucion = fecha;
+            ExcedioElTiempo = fecha - FechaRetiro >
+            TimeSpan.FromMinutes(Reglas.MinutosMaximosBici);
+            if (ExcedioElTiempo)
+                Tarjeta.MultasBiciPendientes++;
+
+            return true;
+        }
     }
 }
